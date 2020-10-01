@@ -16,6 +16,7 @@ namespace meestoo
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,7 +27,7 @@ namespace meestoo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<postgresContext>(options => options.UseNpgsql("Server=meestoo.postgres.database.azure.com;Username=postgres@meestoo;Database=postgres;Port=5432;Password=C9s0v0yf;SSLMode=Prefer"));
+            services.AddDbContext<postgresContext>(options => options.UseNpgsql(Configuration.GetConnectionString("postgres")));
             services.AddMvc()
      .AddNewtonsoftJson(
           options => {

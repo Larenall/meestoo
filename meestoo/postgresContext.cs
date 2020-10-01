@@ -21,16 +21,6 @@ namespace meestoo
         public virtual DbSet<PgBuffercache> PgBuffercache { get; set; }
         public virtual DbSet<PgStatStatements> PgStatStatements { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseNpgsql("Server=meestoo.postgres.database.azure.com;Username=postgres@meestoo;Database=postgres;Port=5432;Password=C9s0v0yf;SSLMode=Prefer");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("pg_buffercache")

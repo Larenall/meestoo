@@ -18,23 +18,30 @@ namespace meestoo
         {
             db = context;
         }
-        [HttpGet]
-        public IEnumerable<Feedback> Get()
+        [HttpGet("{getEmail}/{getName}/{getImgUrl}")]
+        public void OnLogin(string getEmail, string getName,string getImgUrl)
         {
-            var getEmail = "volodamvs@gmail.com";
-            var user = db.Users.ToList().Where(el => el.Email == getEmail).ToList()[0].UserId;
-            var feedlist = db.Feedback.ToList().Where(el => el.UserId == user).ToList();
-            return feedlist;
-        }
-        [HttpPost]
-        public void HttpPost()
-        {
-
-        }
-        [HttpPatch]
-        public void HttpPatch()
-        {
-             
+            var userList = db.Users.ToList();
+            getImgUrl = getImgUrl.Replace('`', '/');
+            var user = userList.Where(el => el.Email == getEmail).ToList();
+            if (user.Count == 0)
+            {
+                int maxId = 0;
+                foreach (Users u in userList)
+                {
+                    maxId = Math.Max(maxId, u.UserId);
+                }
+                Users newUser = new Users(maxId + 1, getName, getEmail, getImgUrl);
+                db.Users.Add(newUser);
+                db.SaveChanges();
+                return;
+            }
+            if (user[0].ImgUrl != getImgUrl || user[0].ImgUrl==null) user[0].ImgUrl = getImgUrl;
+            
+            if (user[0].Name != getName)user[0].Name = getName;
+            
+            db.Users.Update(user[0]);
+            db.SaveChanges();
         }
     }
 }

@@ -22,88 +22,68 @@ namespace meestoo.Controllers
 
         // GET: api/Feedbacks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Feedback>>> GetFeedback()
+        public List<object> GetFeedbacks()
         {
-            return await db.Feedback.ToListAsync();
-        }
+            var feedbackList = db.Feedback.ToList();
+            var userList = db.Users.ToList();
+            List<object> result = new List<object>();
+            feedbackList.ForEach(f => {
+                var user = userList.Where(el => el.UserId == f.UserId).ToList()[0];
+                result.Add(new { id = f.FeedbackId, name = user.Name, imgUrl = user.ImgUrl, text = f.Feedback_, date = f.Date, userlist = f.UserList });
+            });
 
-        // GET: api/Feedbacks/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Feedback>> GetFeedback(int id)
+
+            return result;
+        }
+        [HttpGet("{email}")]
+        public List<object> GetMyFeedbacks(string email)
         {
-            var feedback = await db.Feedback.FindAsync(id);
-
-            if (feedback == null)
-            {
-                return NotFound();
-            }
-
-            return feedback;
+            var feedbackList = db.Feedback.ToList();
+            var user = db.Users.ToList().Where(el=>el.Email==email).ToList()[0];
+            List<object> result = new List<object>();
+            feedbackList.ForEach(f => {
+                if (user.UserId==f.UserId) { 
+                result.Add(new { id = f.FeedbackId, name = user.Name, imgUrl = user.ImgUrl, text = f.Feedback_, date = f.Date, userlist = f.UserList });
+                };
+            });
+            return result;
         }
-
-        // PUT: api/Feedbacks/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutFeedback(int id, Feedback feedback)
+        [HttpGet("confirm/{email}/{id}")]
+        public Boolean FeedbackOfUser(string email,int id)
         {
-            if (id != feedback.FeedbackId)
-            {
-                return BadRequest();
-            }
+            var feedbackUserId = db.Feedback.ToList().Where(el=>el.FeedbackId==id).ToList()[0].UserId;
+            var userId = db.Users.ToList().Where(el => el.Email == email).ToList()[0].UserId;
+            return feedbackUserId == userId ? true : false;
 
-            db.Entry(feedback).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FeedbackExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
-
-        // POST: api/Feedbacks
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Feedback>> PostFeedback(Feedback feedback)
+        [HttpGet("{email}/{id}")]
+        public void LikeDislike(string email, int id)
         {
-            db.Feedback.Add(feedback);
-            await db.SaveChangesAsync();
-
-            return CreatedAtAction("GetFeedback", new { id = feedback.FeedbackId }, feedback);
+            var feedback = db.Feedback.ToList().Where(el => el.FeedbackId == id).ToList()[0];
+            if (feedback.UserList.Contains(email))
+            {
+                feedback.UserList = feedback.UserList.Where(el => el != email).ToArray();
+            }
+            else
+            {
+                feedback.UserList = feedback.UserList.Concat(new string[] { email }).ToArray();
+            }
+            db.Feedback.Update(feedback);
+            db.SaveChanges();
         }
-
-        // DELETE: api/Feedbacks/5
+        [HttpPost("{email}")]
+        public void AddFeedback(string email,[FromBody]Feedback newFeedback)
+        {
+            newFeedback.UserId = db.Users.Where(el => el.Email == email).ToList()[0].UserId;
+            db.Feedback.Add(newFeedback);
+            db.SaveChanges();
+        }
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Feedback>> DeleteFeedback(int id)
+        public void DeleteFeedback(int id)
         {
-            var feedback = await db.Feedback.FindAsync(id);
-            if (feedback == null)
-            {
-                return NotFound();
-            }
-
+            var feedback = db.Feedback.ToList().Where(el => el.FeedbackId == id).ToList()[0];
             db.Feedback.Remove(feedback);
-            await db.SaveChangesAsync();
-
-            return feedback;
-        }
-
-        private bool FeedbackExists(int id)
-        {
-            return db.Feedback.Any(e => e.FeedbackId == id);
+            db.SaveChanges();
         }
     }
 }

@@ -14,9 +14,16 @@ namespace meestoo
         public int UserId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public bool? Resident { get; set; }
+        public string ImgUrl{ get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Feedback> Feedback { get; set; }
+        public Users(int UserId,string Name,string Email,string ImgUrl)
+        {
+            this.UserId = UserId;
+            this.Name = Name;
+            this.Email = Email;
+            this.ImgUrl = ImgUrl;
+        }
     }
 }

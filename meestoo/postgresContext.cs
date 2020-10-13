@@ -51,7 +51,7 @@ namespace meestoo
 
                 entity.Property(e => e.Feedback_).HasColumnName("feedback");
 
-                entity.Property(e => e.Karma).HasColumnName("karma");
+                entity.Property(e => e.UserList).HasColumnName("userlist");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 
@@ -176,7 +176,7 @@ namespace meestoo
 
                 entity.Property(e => e.Name).HasColumnName("name");
 
-                entity.Property(e => e.Resident).HasColumnName("resident");
+                entity.Property(e => e.ImgUrl).HasColumnName("imgurl");
             });
 
             OnModelCreatingPartial(modelBuilder);

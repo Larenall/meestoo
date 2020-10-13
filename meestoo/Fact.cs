@@ -7,7 +7,7 @@ namespace meestoo
     {
         public int Id { get; set; }
         public string Fact_ { get; set; }
-        public string Lat { get; set; }
-        public string Lng { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 }

@@ -16,9 +16,8 @@ namespace meestoo
         [JsonIgnore]
         public virtual Users User { get; set; }
 
-        public Feedback(int FeedbackId, int UserId, string Description, string Date, string[] UserList)
+        public Feedback(int UserId, string Description, string Date, string[] UserList)
         {
-            this.FeedbackId = FeedbackId;
             this.UserId = UserId;
             this.Description = Description;
             this.Date = Date;

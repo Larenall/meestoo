@@ -18,9 +18,8 @@ namespace meestoo
 
         [JsonIgnore]
         public virtual ICollection<Feedback> Feedback { get; set; }
-        public Users(int UserId,string Name,string Email,string ImgUrl)
+        public Users(string Name,string Email,string ImgUrl)
         {
-            this.UserId = UserId;
             this.Name = Name;
             this.Email = Email;
             this.ImgUrl = ImgUrl;

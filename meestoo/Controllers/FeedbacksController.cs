@@ -40,7 +40,7 @@ namespace meestoo.Controllers
         public List<FeedbackDTO> GetMyFeedbacks(string email)
         {
             var feedbackList = db.Feedback.ToList();
-            var user = db.Users.ToList().FirstOrDefault(el => el.Email == email);
+            var user = db.Users.FirstOrDefault(el => el.Email == email);
             List<FeedbackDTO> result = new List<FeedbackDTO>();
             feedbackList.ForEach(f => {
                 if (user.UserId == f.UserId) {
@@ -52,8 +52,8 @@ namespace meestoo.Controllers
         [HttpGet("confirm/{email}/{id}")]
         public Boolean FeedbackOfUser(string email, int id)
         {
-            var feedbackUserId = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == id).UserId;
-            var userId = db.Users.ToList().FirstOrDefault(el => el.Email == email).UserId;
+            var feedbackUserId = db.Feedback.FirstOrDefault(el => el.FeedbackId == id).UserId;
+            var userId = db.Users.FirstOrDefault(el => el.Email == email).UserId;
             return feedbackUserId == userId;
 
         }
@@ -62,7 +62,7 @@ namespace meestoo.Controllers
         public void LikeDislike([FromBody] KarmaDTO karma)
         {
 
-            var feedback = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == karma.Id);
+            var feedback = db.Feedback.FirstOrDefault(el => el.FeedbackId == karma.Id);
             if (feedback.UserList.Contains(karma.Email))
             {
                 feedback.UserList = feedback.UserList.Where(el => el != karma.Email).ToArray();
@@ -77,7 +77,7 @@ namespace meestoo.Controllers
         [HttpPost]
         public void AddFeedback([FromBody] Feedback newFeedback)
         {
-            newFeedback.UserId = db.Users.ToList().FirstOrDefault(el => el.Email == newFeedback.UserList[0]).UserId;
+            newFeedback.UserId = db.Users.FirstOrDefault(el => el.Email == newFeedback.UserList[0]).UserId;
             newFeedback.UserList =new string[] { };
             db.Feedback.Add(newFeedback);
             db.SaveChanges();
@@ -85,7 +85,7 @@ namespace meestoo.Controllers
         [HttpDelete("{id}")]
         public void DeleteFeedback(int id)
         {
-            var feedback = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == id);
+            var feedback = db.Feedback.FirstOrDefault(el => el.FeedbackId == id);
             db.Feedback.Remove(feedback);
             db.SaveChanges();
         }

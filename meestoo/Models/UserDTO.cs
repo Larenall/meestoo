@@ -17,6 +17,10 @@ namespace meestoo.Models
             this.Email = Email;
             this.ImgUrl = ImgUrl;
         }
+        public static UserDTO Transform(Users user)
+        {
+            return new UserDTO(user.Name, user.Email, user.ImgUrl);
+        }
     }
     
 }

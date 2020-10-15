@@ -27,6 +27,8 @@ namespace meestoo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<UserService>();
+            services.AddRazorPages();
             services.AddDbContext<postgresContext>(options => options.UseNpgsql(Configuration.GetConnectionString("postgres")));
             services.AddMvc()
      .AddNewtonsoftJson(

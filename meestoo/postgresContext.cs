@@ -32,7 +32,7 @@ namespace meestoo
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -45,7 +45,8 @@ namespace meestoo
             {
                 entity.ToTable("feedback");
 
-                entity.Property(e => e.FeedbackId).HasColumnName("feedback_id");
+                entity.Property(e => e.FeedbackId).HasColumnName("feedback_id")
+                .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
@@ -170,7 +171,7 @@ namespace meestoo
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Email).HasColumnName("email");
 

@@ -49,7 +49,7 @@ namespace meestoo
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
-                entity.Property(e => e.Feedback_).HasColumnName("feedback");
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.UserList).HasColumnName("userlist");
 

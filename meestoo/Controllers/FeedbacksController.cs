@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using meestoo;
+using meestoo.Models;
 
 namespace meestoo.Controllers
 {
@@ -22,66 +23,69 @@ namespace meestoo.Controllers
 
         // GET: api/Feedbacks
         [HttpGet]
-        public List<object> GetFeedbacks()
+        public List<FeedbackDTO> GetFeedbacks()
         {
             var feedbackList = db.Feedback.ToList();
             var userList = db.Users.ToList();
-            List<object> result = new List<object>();
+            List<FeedbackDTO> result = new List<FeedbackDTO>();
             feedbackList.ForEach(f => {
-                var user = userList.Where(el => el.UserId == f.UserId).ToList()[0];
-                result.Add(new { id = f.FeedbackId, name = user.Name, imgUrl = user.ImgUrl, text = f.Feedback_, date = f.Date, userlist = f.UserList });
+                var user = userList.FirstOrDefault(el => el.UserId == f.UserId);
+                result.Add(new FeedbackDTO(f.FeedbackId, user.Name, user.ImgUrl, f.Description, f.Date, f.UserList));
             });
 
 
             return result;
         }
         [HttpGet("{email}")]
-        public List<object> GetMyFeedbacks(string email)
+        public List<FeedbackDTO> GetMyFeedbacks(string email)
         {
             var feedbackList = db.Feedback.ToList();
-            var user = db.Users.ToList().Where(el=>el.Email==email).ToList()[0];
-            List<object> result = new List<object>();
+            var user = db.Users.ToList().FirstOrDefault(el => el.Email == email);
+            List<FeedbackDTO> result = new List<FeedbackDTO>();
             feedbackList.ForEach(f => {
-                if (user.UserId==f.UserId) { 
-                result.Add(new { id = f.FeedbackId, name = user.Name, imgUrl = user.ImgUrl, text = f.Feedback_, date = f.Date, userlist = f.UserList });
+                if (user.UserId == f.UserId) {
+                    result.Add(new FeedbackDTO(f.FeedbackId, user.Name, user.ImgUrl, f.Description, f.Date, f.UserList));
                 };
             });
             return result;
         }
         [HttpGet("confirm/{email}/{id}")]
-        public Boolean FeedbackOfUser(string email,int id)
+        public Boolean FeedbackOfUser(string email, int id)
         {
-            var feedbackUserId = db.Feedback.ToList().Where(el=>el.FeedbackId==id).ToList()[0].UserId;
-            var userId = db.Users.ToList().Where(el => el.Email == email).ToList()[0].UserId;
-            return feedbackUserId == userId ? true : false;
+            var feedbackUserId = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == id).UserId;
+            var userId = db.Users.ToList().FirstOrDefault(el => el.Email == email).UserId;
+            return feedbackUserId == userId;
 
         }
-        [HttpGet("{email}/{id}")]
-        public void LikeDislike(string email, int id)
+
+        [HttpPut]
+        public void LikeDislike([FromBody] KarmaDTO karma)
         {
-            var feedback = db.Feedback.ToList().Where(el => el.FeedbackId == id).ToList()[0];
-            if (feedback.UserList.Contains(email))
+
+            var feedback = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == karma.Id);
+            if (feedback.UserList.Contains(karma.Email))
             {
-                feedback.UserList = feedback.UserList.Where(el => el != email).ToArray();
+                feedback.UserList = feedback.UserList.Where(el => el != karma.Email).ToArray();
             }
             else
             {
-                feedback.UserList = feedback.UserList.Concat(new string[] { email }).ToArray();
+                feedback.UserList = feedback.UserList.Concat(new string[] { karma.Email }).ToArray();
             }
             db.Feedback.Update(feedback);
             db.SaveChanges();
         }
-        [HttpPost("{email}")]
-        public void AddFeedback(string email,[FromBody]Feedback newFeedback)
+        [HttpPost]
+        public void AddFeedback([FromBody] Feedback newFeedback)
         {
-            newFeedback.UserId = db.Users.Where(el => el.Email == email).ToList()[0].UserId;
+            newFeedback.UserId = db.Users.ToList().FirstOrDefault(el => el.Email == newFeedback.UserList[0]).UserId;
+            newFeedback.UserList =new string[] { };
             db.Feedback.Add(newFeedback);
             db.SaveChanges();
         }
         [HttpDelete("{id}")]
         public void DeleteFeedback(int id)
         {
-            var feedback = db.Feedback.ToList().Where(el => el.FeedbackId == id).ToList()[0];
+            var feedback = db.Feedback.ToList().FirstOrDefault(el => el.FeedbackId == id);
             db.Feedback.Remove(feedback);
             db.SaveChanges();
         }

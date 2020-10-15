@@ -157,3 +157,4 @@ C:\Users\volod\source\repos\meestoo\meestoo\bin\Debug\netcoreapp3.1\runtimes\win
 C:\Users\volod\source\repos\meestoo\meestoo\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\volod\source\repos\meestoo\meestoo\obj\Debug\netcoreapp3.1\meestoo.csproj.CoreCompileInputs.cache
 C:\Users\volod\source\repos\meestoo\meestoo\obj\Debug\netcoreapp3.1\meestoo.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\volod\source\repos\meestoo\meestoo\bin\Debug\netcoreapp3.1\Properties\ServiceDependencies\meesto - Web Deploy\profile.arm.json

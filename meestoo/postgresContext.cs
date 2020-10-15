@@ -34,7 +34,7 @@ namespace meestoo
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Fact_).HasColumnName("fact");
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Lat).HasColumnName("lat");
 

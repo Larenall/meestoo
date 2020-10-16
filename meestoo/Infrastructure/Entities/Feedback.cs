@@ -8,15 +8,19 @@ namespace meestoo
 {
     public partial class Feedback
     {
+        public Feedback()
+        {
+            UserFeedbackReaction = new HashSet<UserFeedbackReaction>();
+        }
         public int FeedbackId { get; set; }
         public int UserId { get; set; }
         public string Description { get; set; }
-        public string Date { get; set; }
-        public string[] UserList { get; set; }
-        [JsonIgnore]
-        public virtual Users User { get; set; }
-
-        public Feedback(int UserId, string Description, string Date, string[] UserList)
+        public DateTime Date { get; set; }
+        public int[] UserList { get; set; }
+        
+        public virtual User User { get; set; }
+        public virtual ICollection<UserFeedbackReaction> UserFeedbackReaction { get; set; }
+        public Feedback(int UserId, string Description, DateTime Date, int[] UserList)
         {
             this.UserId = UserId;
             this.Description = Description;

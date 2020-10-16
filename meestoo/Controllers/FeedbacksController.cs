@@ -63,22 +63,23 @@ namespace meestoo.Controllers
         {
 
             var feedback = db.Feedback.FirstOrDefault(el => el.FeedbackId == karma.Id);
-            if (feedback.UserList.Contains(karma.Email))
+            var userId = db.Users.FirstOrDefault(el => el.Email == karma.Email).UserId;
+            if (feedback.UserList.Contains(userId))
             {
-                feedback.UserList = feedback.UserList.Where(el => el != karma.Email).ToArray();
+                feedback.UserList = feedback.UserList.Where(el => el != karma.Id).ToArray();
             }
             else
             {
-                feedback.UserList = feedback.UserList.Concat(new string[] { karma.Email }).ToArray();
+                feedback.UserList = feedback.UserList.Concat(new int[] { karma.Id }).ToArray();
             }
             db.Feedback.Update(feedback);
             db.SaveChanges();
         }
         [HttpPost]
-        public void AddFeedback([FromBody] Feedback newFeedback)
+        public void AddFeedback([FromBody] FeedbackDTO getFeedback)
         {
-            newFeedback.UserId = db.Users.FirstOrDefault(el => el.Email == newFeedback.UserList[0]).UserId;
-            newFeedback.UserList =new string[] { };
+            int userId = db.Users.FirstOrDefault(el => el.Email == getFeedback.Email).UserId;
+            Feedback newFeedback = new Feedback(userId, getFeedback.Description, getFeedback.Date,new int[] { }); ;
             db.Feedback.Add(newFeedback);
             db.SaveChanges();
         }

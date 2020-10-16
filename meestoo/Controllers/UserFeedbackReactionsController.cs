@@ -11,22 +11,19 @@ namespace meestoo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InfoesController : ControllerBase
+    public class UserFeedbackReactionsController : ControllerBase
     {
         private readonly postgresContext db;
 
-        public InfoesController(postgresContext context)
+        public UserFeedbackReactionsController(postgresContext context)
         {
             db = context;
         }
-
-        // GET: api/Infoes
         [HttpGet]
-        public List<Info> GetInfo()
+        public List<UserFeedbackReaction> get()
         {
-            return db.Info.ToList();
+            return db.UserFeedbackReaction.ToList();
         }
-
         
     }
 }

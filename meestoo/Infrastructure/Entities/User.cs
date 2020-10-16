@@ -4,11 +4,12 @@ using Newtonsoft.Json;
 
 namespace meestoo
 {
-    public partial class Users
+    public partial class User
     {
-        public Users()
+        public User()
         {
             Feedback = new HashSet<Feedback>();
+            UserFeedbackReaction = new HashSet<UserFeedbackReaction>();
         }
 
         public int UserId { get; set; }
@@ -16,9 +17,9 @@ namespace meestoo
         public string Email { get; set; }
         public string ImgUrl{ get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<Feedback> Feedback { get; set; }
-        public Users(string Name,string Email,string ImgUrl)
+        public virtual ICollection<UserFeedbackReaction> UserFeedbackReaction { get; set; }
+        public User(string Name,string Email,string ImgUrl)
         {
             this.Name = Name;
             this.Email = Email;

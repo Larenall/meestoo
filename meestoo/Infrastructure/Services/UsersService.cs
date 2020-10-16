@@ -32,15 +32,15 @@ namespace meestoo
             }
         }
 
-        protected Users CreateUser(UserDTO userDto)
+        protected User CreateUser(UserDTO userDto)
         {
-            var newUser = new Users(userDto.Name, userDto.Email, userDto.ImgUrl);
+            var newUser = new User(userDto.Name, userDto.Email, userDto.ImgUrl);
             db.Users.Add(newUser);
             db.SaveChanges();
             return newUser;
         }
 
-        protected void UpdateUser(Users user, UserDTO userDto)
+        protected void UpdateUser(User user, UserDTO userDto)
         {
             bool hasUpdates = false;
             if (IsImageChanged(user, userDto))
@@ -62,12 +62,12 @@ namespace meestoo
             }
         }
 
-        private static bool IsNameChanged(Users user, UserDTO userDto)
+        private static bool IsNameChanged(User user, UserDTO userDto)
         {
             return user.Name != null && !user.Name.Equals(userDto.Name, StringComparison.OrdinalIgnoreCase);
         }
 
-        public bool IsImageChanged(Users user, UserDTO userDto)
+        public bool IsImageChanged(User user, UserDTO userDto)
         {
             return user.ImgUrl != userDto.ImgUrl || user.ImgUrl == null;
         }

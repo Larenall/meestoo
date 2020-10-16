@@ -10,10 +10,10 @@ namespace meestoo.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImgUrl { get; set; }
-        public string Email { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public int[] UserList { get; set; }
+        public string Email { get; set; }
 
         public FeedbackDTO(int Id,string Name, string ImgUrl, string Description, DateTime Date, int[] UserList) //send to website
         {

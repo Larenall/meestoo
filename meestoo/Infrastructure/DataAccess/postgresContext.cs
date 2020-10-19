@@ -55,7 +55,7 @@ namespace meestoo
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
-                entity.Property(e => e.UserList).HasColumnName("userlist");
+                entity.Property(e => e.Karma).HasColumnName("karma");
 
                 entity.Property(e => e.UserId).HasColumnName("user_id");
 

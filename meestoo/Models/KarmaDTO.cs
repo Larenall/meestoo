@@ -8,13 +8,13 @@ namespace meestoo.Models
     public class KarmaDTO
     {
         public int Id { get; set; }
-        public string Email { get; set; }
+        public int UserId { get; set; }
 
 
-        public KarmaDTO(int Id,string Email)
+        public KarmaDTO(int Id,int UserId)
         {
             this.Id = Id;
-            this.Email = Email;
+            this.UserId = UserId;
         }
     }
     

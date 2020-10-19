@@ -16,7 +16,7 @@ namespace meestoo
             db = context;
         }
 
-        public void CreateOrUpdateUser(UserDTO userDto)
+        public int CreateOrUpdateUser(UserDTO userDto)
         {
             EscapeImageUrl(userDto);
 
@@ -30,6 +30,7 @@ namespace meestoo
             {
                 UpdateUser(user, userDto);
             }
+            return user.UserId;
         }
 
         protected User CreateUser(UserDTO userDto)

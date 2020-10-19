@@ -20,9 +20,10 @@ namespace meestoo
             _userService = userService;
         }
         [HttpPost]
-        public void OnLogin(UserDTO getUser)
+        public int OnLogin(UserDTO getUser)
         {
-            _userService.CreateOrUpdateUser(getUser);
+            return _userService.CreateOrUpdateUser(getUser);
+             
         }
     }
 }

@@ -20,73 +20,51 @@ namespace meestoo.Controllers
         {
             db = context;
         }
-
-        // GET: api/Feedbacks
-        [HttpGet]
-        public List<FeedbackDTO> GetFeedbacks()
+        [HttpGet("{id}")]
+        public List<SendFeedbackDTO> GetFeedbacks(int id)
         {
             var feedbackList = db.Feedback.ToList();
-            var userList = db.Users.ToList();
-            List<FeedbackDTO> result = new List<FeedbackDTO>();
+            var userList = db.Users;
+            var reactionList = db.UserFeedbackReaction;
+            List<SendFeedbackDTO> result = new List<SendFeedbackDTO>();
             feedbackList.ForEach(f => {
                 var user = userList.FirstOrDefault(el => el.UserId == f.UserId);
-                result.Add(new FeedbackDTO(f.FeedbackId, user.Name, user.ImgUrl, f.Description, f.Date, f.UserList));
-            });
-
-
-            return result;
-        }
-        [HttpGet("{email}")]
-        public List<FeedbackDTO> GetMyFeedbacks(string email)
-        {
-            var feedbackList = db.Feedback.ToList();
-            var user = db.Users.FirstOrDefault(el => el.Email == email);
-            List<FeedbackDTO> result = new List<FeedbackDTO>();
-            feedbackList.ForEach(f => {
-                if (user.UserId == f.UserId) {
-                    result.Add(new FeedbackDTO(f.FeedbackId, user.Name, user.ImgUrl, f.Description, f.Date, f.UserList));
-                };
+                var reaction = reactionList.FirstOrDefault(el => el.UserId == id && el.FeedbackId == f.FeedbackId);
+                result.Add(new SendFeedbackDTO(f.FeedbackId, user.Name, user.ImgUrl, f.Description, f.Date, f.Karma, reaction != null ,f.UserId==id));
             });
             return result;
         }
-        [HttpGet("confirm/{email}/{id}")]
-        public Boolean FeedbackOfUser(string email, int id)
-        {
-            var feedbackUserId = db.Feedback.FirstOrDefault(el => el.FeedbackId == id).UserId;
-            var userId = db.Users.FirstOrDefault(el => el.Email == email).UserId;
-            return feedbackUserId == userId;
-
-        }
-
         [HttpPut]
         public void LikeDislike([FromBody] KarmaDTO karma)
         {
 
             var feedback = db.Feedback.FirstOrDefault(el => el.FeedbackId == karma.Id);
-            var userId = db.Users.FirstOrDefault(el => el.Email == karma.Email).UserId;
-            if (feedback.UserList.Contains(userId))
+            var reaction = db.UserFeedbackReaction.FirstOrDefault(el => karma.Id == el.FeedbackId && karma.UserId==el.UserId);
+            if (reaction == null)
             {
-                feedback.UserList = feedback.UserList.Where(el => el != karma.Id).ToArray();
+                feedback.Karma = feedback.Karma + 1;
+                db.UserFeedbackReaction.Add(new UserFeedbackReaction(karma.Id, karma.UserId));
             }
             else
             {
-                feedback.UserList = feedback.UserList.Concat(new int[] { karma.Id }).ToArray();
+                feedback.Karma = feedback.Karma - 1;
+                db.UserFeedbackReaction.Remove(reaction);
             }
             db.Feedback.Update(feedback);
             db.SaveChanges();
         }
         [HttpPost]
-        public void AddFeedback([FromBody] FeedbackDTO getFeedback)
+        public void AddFeedback([FromBody] GetFeedbackDTO getFeedback)
         {
-            int userId = db.Users.FirstOrDefault(el => el.Email == getFeedback.Email).UserId;
-            Feedback newFeedback = new Feedback(userId, getFeedback.Description, getFeedback.Date,new int[] { }); ;
-            db.Feedback.Add(newFeedback);
+            db.Feedback.Add(new Feedback(getFeedback.UserId, getFeedback.Description, getFeedback.Date, 0));
             db.SaveChanges();
         }
         [HttpDelete("{id}")]
         public void DeleteFeedback(int id)
         {
             var feedback = db.Feedback.FirstOrDefault(el => el.FeedbackId == id);
+            var reactions = db.UserFeedbackReaction.Where(el => el.FeedbackId == id);
+            db.UserFeedbackReaction.RemoveRange(reactions);
             db.Feedback.Remove(feedback);
             db.SaveChanges();
         }

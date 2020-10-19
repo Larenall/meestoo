@@ -12,20 +12,20 @@ namespace meestoo
         {
             UserFeedbackReaction = new HashSet<UserFeedbackReaction>();
         }
-        public int FeedbackId { get; set; }
+        
         public int UserId { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
-        public int[] UserList { get; set; }
-        
+        public int Karma { get; set; }
+        public int FeedbackId { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<UserFeedbackReaction> UserFeedbackReaction { get; set; }
-        public Feedback(int UserId, string Description, DateTime Date, int[] UserList)
+        public Feedback(int UserId, string Description, DateTime Date, int Karma)
         {
             this.UserId = UserId;
             this.Description = Description;
             this.Date = Date;
-            this.UserList = UserList;
+            this.Karma = Karma;
         }
     }
 }

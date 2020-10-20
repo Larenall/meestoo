@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using meestoo;
 using meestoo.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace meestoo.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class FeedbacksController : ControllerBase

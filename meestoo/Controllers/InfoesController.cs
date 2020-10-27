@@ -18,15 +18,6 @@ namespace meestoo.Controllers
         public InfoesController(postgresContext context)
         {
             db = context;
-        }
-
-        // GET: api/Infoes
-        [HttpGet]
-        public List<Info> GetInfo()
-        {
-            return db.Info.ToList();
-        }
-
-        
+        }        
     }
 }

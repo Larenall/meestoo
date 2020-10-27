@@ -18,12 +18,6 @@ namespace meestoo.Controllers
         public UserFeedbackReactionsController(postgresContext context)
         {
             db = context;
-        }
-        [HttpGet]
-        public List<UserFeedbackReaction> get()
-        {
-            return db.UserFeedbackReaction.ToList();
-        }
-        
+        }        
     }
 }
